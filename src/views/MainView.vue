@@ -18,17 +18,17 @@
             <UserOutlined/>
           </template>
           <template #title>个人中心</template>
-          <a-menu-item key="1">我的信息</a-menu-item>
-          <a-menu-item key="2">我的车票</a-menu-item>
+          <a-menu-item key="1" @click="gotoMain">我的信息</a-menu-item>
+          <a-menu-item key="2" @click="gotoMyTicket">我的车票</a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="3">
+        <a-menu-item key="3" @click="gotoMarket">
           <template #icon>
             <PayCircleOutlined/>
           </template>
           <span>购买车票</span>
         </a-menu-item>
 
-        <a-menu-item key="4" v-if="isAdmin">
+        <a-menu-item key="4" v-if="isAdmin" @click="gotoManage">
           <template #icon>
             <UnorderedListOutlined/>
           </template>
@@ -95,11 +95,30 @@ let selectedKeys = ref(['1'])
 let collapsed = ref(false)
 let isAdmin = ref(localStorage.getItem('isAdmin') === 'true')
 let openKeys = ref(['sub1'])
+let option = 1;
 
 let logout = () => {
   localStorage.clear();
   $router.push('/');
 }
+
+let gotoMain = () => {
+  console.log(option)
+  option = 1
+}
+
+let gotoMyTicket = () => {
+  option = 2
+}
+
+let gotoMarket = () => {
+  option = 3
+}
+
+let gotoManage = () => {
+  option = 4
+}
+
 
 </script>
 

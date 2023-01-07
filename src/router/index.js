@@ -24,7 +24,7 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next)=> {
+router.beforeEach((to, from, next) => {
     if (to.path === '/main') {
         let user = localStorage.getItem('user')
         if (!user) {
