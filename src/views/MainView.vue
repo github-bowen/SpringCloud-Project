@@ -15,7 +15,7 @@
 
         <a-sub-menu key="sub1">
           <template #icon>
-            <UserOutlined />
+            <UserOutlined/>
           </template>
           <template #title>个人中心</template>
           <a-menu-item key="1">我的信息</a-menu-item>
@@ -23,21 +23,21 @@
         </a-sub-menu>
         <a-menu-item key="3">
           <template #icon>
-            <PayCircleOutlined />
+            <PayCircleOutlined/>
           </template>
           <span>购买车票</span>
         </a-menu-item>
 
         <a-menu-item key="4" v-if="isAdmin">
           <template #icon>
-            <UnorderedListOutlined />
+            <UnorderedListOutlined/>
           </template>
           <span>车次管理</span>
         </a-menu-item>
 
         <a-sub-menu key="sub2" v-if="isAdmin">
           <template #icon>
-            <AppstoreOutlined />
+            <AppstoreOutlined/>
           </template>
           <template #title>多级菜单样例</template>
           <a-menu-item key="9">Option 9</a-menu-item>
@@ -60,12 +60,12 @@
             @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
-        <a-button type="primary" danger class="logoutButton">退出登录</a-button>
+        <a-button type="primary" danger class="logoutButton" @click="logout">退出登录</a-button>
       </a-layout-header>
       <!--      主体-->
       <a-layout-content
           :style="{ margin: '10px 16px', padding: '10px', background: '#fff', minHeight: '280px' }">
-        这里包含个人信息及其修改,退出登录等等内容
+        这里包含个人信息及其修改等内容
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -83,14 +83,23 @@ import {
   MenuFoldOutlined
 } from '@ant-design/icons-vue';
 import {ref} from 'vue'
+import {useRouter} from "vue-router";
 //左侧菜单选中的key
+let $router = useRouter()
+let user = JSON.parse(localStorage.getItem('user'))
+if (!user) {
+  $router.push('/') //返回登录页面
+}
 let selectedKeys = ref(['1'])
 // 是否折叠
 let collapsed = ref(false)
 let isAdmin = ref(localStorage.getItem('isAdmin') === 'true')
 let openKeys = ref(['sub1'])
 
-
+let logout = () => {
+  localStorage.clear();
+  $router.push('/');
+}
 
 </script>
 
@@ -130,6 +139,7 @@ let openKeys = ref(['sub1'])
       color: #1890ff;
     }
   }
+
   .logoutButton {
     margin-top: 15px;
     margin-right: 30px;
