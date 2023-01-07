@@ -65,7 +65,7 @@
       <!--      主体-->
       <a-layout-content
           :style="{ margin: '10px 16px', padding: '10px', background: '#fff', minHeight: '280px' }">
-        这里包含个人信息及其修改等内容
+        <test-component></test-component>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -84,6 +84,7 @@ import {
 } from '@ant-design/icons-vue';
 import {ref} from 'vue'
 import {useRouter} from "vue-router";
+import TestComponent from "@/components/testComponent";
 //左侧菜单选中的key
 let $router = useRouter()
 let user = JSON.parse(localStorage.getItem('user'))
