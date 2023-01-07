@@ -26,14 +26,20 @@
           <a-input-password v-model:value="formState.pwd"/>
         </a-form-item>
 
-        <a-form-item name="remember" :wrapper-col="{ offset: 4, span: 16 }">
-          <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
+        <a-form-item
+            label="重复密码"
+            name="pwd2"
+            :rules="[{ required: true, message: '请再次输入密码!' }]"
+        >
+          <a-input-password v-model:value="formState.pwd2"/>
         </a-form-item>
 
+
         <a-form-item :wrapper-col="{ offset: 4, span: 16 }">
-          <a-button type="primary" html-type="submit">登录</a-button>
-          <a-space></a-space>
-          <a-button type="primary" @click="goRegister" style="margin-left: 80px">注册</a-button>
+          <a-button :disabled="disabled" type="primary" html-type="submit" class="register-form-button">
+            注册
+          </a-button>
+          <a href="/" style="color: firebrick;margin-left: 20px">去登录</a>
         </a-form-item>
 
       </a-form>
@@ -42,8 +48,8 @@
 </template>
 
 <script setup>
-import {reactive} from "vue";
-import {loginReq} from "@/api/user";
+import {computed, reactive} from "vue";
+import {registerReq} from "@/api/user";
 import {useRouter} from "vue-router"
 
 let $router = useRouter()
@@ -51,42 +57,33 @@ let $router = useRouter()
 const formState = reactive({
   username: '',
   pwd: '',
+  pwd2: '',
   remember: true,
 });
 
-let goRegister = () => {
-  $router.push('/register')
-}
 
 // 提交登录
 const onFinish = values => {
-  loginReq("post", {
+  registerReq('post', {
     userId: formState.username,
-    password: formState.pwd
-  }).then(res => {
-    if (res.data.success) {
-      localStorage.setItem('user', JSON.stringify({
-        token: res.data.token,
-        isAdmin: res.data.isAdmin,
-        userId: res.data.userId
-      }))
-      localStorage.setItem('token', res.data.token)
-      console.log(res.data)
+    password: formState.pwd2
+  }).then(res=>{
+    if (res.success) {
+      $router.push('/')
+    } else {
+      //TODO:错误提示
     }
   })
-  //  TODO
-  localStorage.setItem('isAdmin', 'true')
-  localStorage.setItem('user', JSON.stringify({
-    token: '123123',
-    isAdmin: 'true',
-    userId: '123123',
-  }))
-  $router.push('/main')
+  $router.push('/')
   console.log('Success:', values);
 };
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo);
 };
+
+const disabled = computed(() => {
+  return !(formState.pwd2 === formState.pwd);
+});
 </script>
 
 <style lang="scss" scoped>
