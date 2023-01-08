@@ -18,17 +18,17 @@
             <UserOutlined/>
           </template>
           <template #title>个人中心</template>
-          <a-menu-item key="1" @click="gotoMain">我的信息</a-menu-item>
-          <a-menu-item key="2" @click="gotoMyTicket">我的车票</a-menu-item>
+          <a-menu-item key="1" @click="()=>option=1">我的信息</a-menu-item>
+          <a-menu-item key="2" @click="()=>option=2">我的车票</a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="3" @click="gotoMarket">
+        <a-menu-item key="3" @click="()=>option=3">
           <template #icon>
             <PayCircleOutlined/>
           </template>
           <span>购买车票</span>
         </a-menu-item>
 
-        <a-menu-item key="4" v-if="isAdmin" @click="gotoManage">
+        <a-menu-item key="4" v-if="isAdmin" @click="()=>option=4">
           <template #icon>
             <UnorderedListOutlined/>
           </template>
@@ -65,7 +65,8 @@
       <!--      主体-->
       <a-layout-content
           :style="{ margin: '10px 16px', padding: '10px', background: '#fff', minHeight: '280px' }">
-        <test-component></test-component>
+        <modify-user-info v-if="option===1" class="userInfoComponent"></modify-user-info>
+        <test-component v-else-if="option === 2"></test-component>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -85,6 +86,7 @@ import {
 import {ref} from 'vue'
 import {useRouter} from "vue-router";
 import TestComponent from "@/components/testComponent";
+import ModifyUserInfo from "@/components/modifyUserInfo";
 //左侧菜单选中的key
 let $router = useRouter()
 let user = JSON.parse(localStorage.getItem('user'))
@@ -96,29 +98,29 @@ let selectedKeys = ref(['1'])
 let collapsed = ref(false)
 let isAdmin = ref(localStorage.getItem('isAdmin') === 'true')
 let openKeys = ref(['sub1'])
-let option = 1;
+let option = ref(1);
 
 let logout = () => {
   localStorage.clear();
   $router.push('/');
 }
 
-let gotoMain = () => {
-  console.log(option)
-  option = 1
-}
-
-let gotoMyTicket = () => {
-  option = 2
-}
-
-let gotoMarket = () => {
-  option = 3
-}
-
-let gotoManage = () => {
-  option = 4
-}
+// let gotoMain = () => {
+//   this.option = 1
+//   console.log(option)
+// }
+//
+// let gotoMyTicket = () => {
+//   this.option = 2
+// }
+//
+// let gotoMarket = () => {
+//   this.option = 3
+// }
+//
+// let gotoManage = () => {
+//   this.option = 4
+// }
 
 
 </script>
@@ -164,6 +166,17 @@ let gotoManage = () => {
     margin-top: 15px;
     margin-right: 30px;
     float: right;
+  }
+
+  .userInfoComponent{
+    margin-left: 15vw;
+    width: 50vw;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0;
+    border: 1px solid dodgerblue;
+    border-radius: 8px;
   }
 }
 

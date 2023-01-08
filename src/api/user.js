@@ -18,6 +18,12 @@ export async function userInfoReq(method, params) {
     return request(url, method, params);
 }
 
+export async function modifyUserInfoReq(method, params) {
+    //个人信息
+    const url = `/modifyUserInfo`; // userId在token
+    return request(url, method, params);
+}
+
 
 export async function userTicketsReq(method, params, userId) {
     //查询指定用户的车票
