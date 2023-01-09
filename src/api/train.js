@@ -20,7 +20,7 @@ export async function delTrainReq(method, params, trainId) {
 
 export async function changeTrainReq(method, params, trainId) {
     //修改车次
-    const url = `/changeTrain/${trainId}`;
+    const url = `/modifyTrain/${trainId}`;
     return request(url, method, params);
 }
 

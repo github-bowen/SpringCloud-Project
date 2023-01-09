@@ -76,9 +76,9 @@ const onFinish = values => {
     password: formState.pwd
   }).then(res => {
     if (res.data.success) {
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('userId', res.data.userId)
-      localStorage.setItem('isAdmin', res.data.isAdmin,)
+      localStorage.setItem('token', res.data.data.token);
+      localStorage.setItem('userId', res.data.data.userId)
+      localStorage.setItem('isAdmin', res.data.data.isAdmin,)
       console.log(res.data);
       message.success('登录成功');
       $router.push('/main');

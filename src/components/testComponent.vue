@@ -377,7 +377,7 @@ export default defineComponent({
     loadInfo: function () {
       showTrainReq('get').then(res => {
         if (res.data.success) {
-          this.dataSource = ref(res.data.trainInfo);
+          this.dataSource = ref(res.data.data);
           message.success('成功加载车次信息')
         } else {
           message.success('加载车次信息失败')
