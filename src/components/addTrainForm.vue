@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button type="primary" @click="showModal">添加车次</a-button>
-    <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
+    <a-modal v-model:visible="visible" title="添加车次" @ok="handleOk">
       <a-form
           ref="formRef"
           name="dynamic_form_nest_item"

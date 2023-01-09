@@ -1,7 +1,7 @@
 <template>
   <a-layout class="layout">
     <!--   左侧 -->
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible >
 
       <img src="../assets/LOGO.jpg" v-if="collapsed" alt="" class="logoSmall">
       <img src="../assets/LOGO.jpg" v-else alt="" class="logoBig">
@@ -54,17 +54,21 @@
     <a-layout>
       <!--顶部-->
       <a-layout-header style="background: #fff; padding: 0">
+        <div style="display: inline-flex">
         <menu-unfold-outlined
             v-if="collapsed"
             class="trigger"
             @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
+        </div>
+        <add-train-form v-if="option=== 4" style="display: inline-flex"></add-train-form>
+
         <a-button type="primary" danger class="logoutButton" @click="logout">退出登录</a-button>
       </a-layout-header>
       <!--      主体-->
       <a-layout-content
-          :style="{ margin: '10px 16px', padding: '10px', background: '#fff', minHeight: '280px' }">
+          :style="{ margin: '10px 8px', padding: '0px', background: '#fff', minHeight: '280px' }">
         <modify-user-info v-if="option===1" class="userInfoComponent"></modify-user-info>
 <!--        <test-component v-else-if="option === 2"></test-component>-->
 <!--        <test-component v-else-if="option === 3"></test-component>-->
@@ -83,12 +87,13 @@ import {
   UnorderedListOutlined,
   UserOutlined,
   MenuUnfoldOutlined,
-  MenuFoldOutlined
+  MenuFoldOutlined,
 } from '@ant-design/icons-vue';
 import {ref} from 'vue'
 import {useRouter} from "vue-router";
 import TestComponent from "@/components/testComponent";
 import ModifyUserInfo from "@/components/modifyUserInfo";
+import AddTrainForm from "@/components/addTrainForm";
 //左侧菜单选中的key
 let $router = useRouter()
 let user = JSON.parse(localStorage.getItem('user'))
@@ -106,24 +111,6 @@ let logout = () => {
   localStorage.clear();
   $router.push('/');
 }
-
-// let gotoMain = () => {
-//   this.option = 1
-//   console.log(option)
-// }
-//
-// let gotoMyTicket = () => {
-//   this.option = 2
-// }
-//
-// let gotoMarket = () => {
-//   this.option = 3
-// }
-//
-// let gotoManage = () => {
-//   this.option = 4
-// }
-
 
 </script>
 
