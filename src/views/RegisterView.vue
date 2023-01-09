@@ -51,6 +51,7 @@
 import {computed, reactive} from "vue";
 import {registerReq} from "@/api/user";
 import {useRouter} from "vue-router"
+import {message} from "ant-design-vue";
 
 let $router = useRouter()
 
@@ -68,10 +69,11 @@ const onFinish = values => {
     userId: formState.username,
     password: formState.pwd2
   }).then(res=>{
-    if (res.success) {
+    if (res.data.success) {
+      message.success('注册成功')
       $router.push('/')
     } else {
-      //TODO:错误提示
+      message.error('该用户已存在')
     }
   })
   $router.push('/')

@@ -9,34 +9,37 @@
       @validate="handleValidate"
       @finishFailed="handleFinishFailed"
   >
-    <div style="text-align: center; font-size: 28px; margin-right: 10px" >修改密码</div>
+    <div style="text-align: center; font-size: 28px; margin-right: 10px">修改密码</div>
 
     <a-form-item>
-      <a-comment style=" font-size: 16px;">您的用户ID:{{userId}}</a-comment>
+      <a-comment style=" font-size: 16px;">您的用户ID:{{ userId }}</a-comment>
     </a-form-item>
     <a-form-item has-feedback label="PrePassword" name="prePass">
-      <a-input v-model:value="formState.prePass" type="password" autocomplete="off" />
+      <a-input v-model:value="formState.prePass" type="password" autocomplete="off"/>
     </a-form-item>
     <a-form-item has-feedback label="Password" name="pass">
-      <a-input v-model:value="formState.pass" type="password" autocomplete="off" />
+      <a-input v-model:value="formState.pass" type="password" autocomplete="off"/>
     </a-form-item>
     <a-form-item has-feedback label="Confirm" name="checkPass">
-      <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
+      <a-input v-model:value="formState.checkPass" type="password" autocomplete="off"/>
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" html-type="submit">Submit</a-button>
       <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
     </a-form-item>
   </a-form>
+
 </template>
 <script>
-import { defineComponent, reactive, ref } from 'vue';
+import {defineComponent, reactive, ref} from 'vue';
 import {modifyUserInfoReq} from "@/api/user";
+import {message} from "ant-design-vue";
+
 export default defineComponent({
   setup() {
     const formRef = ref();
     const formState = reactive({
-      prePass:'',
+      prePass: '',
       pass: '',
       checkPass: '',
     });
@@ -60,6 +63,15 @@ export default defineComponent({
         return Promise.resolve();
       }
     };
+    // const success = () => {
+    //   message.success('密码修改成功!');
+    // };
+    // const error = () => {
+    //   message.error('原密码错误,请重试!');
+    // };
+    // const warning = () => {
+    //   message.warning('This is a warning message');
+    // };
     const rules = {
       prePass: [{
         required: true,
@@ -85,8 +97,14 @@ export default defineComponent({
     };
     const handleFinish = values => {
       modifyUserInfoReq('post', {
-        prePassword:formState.prePass,
-        password:formState.pass
+        prePassword: formState.prePass,
+        password: formState.pass
+      }).then(res => {
+        if (res.data.success) {
+          message.success('密码修改成功!');
+        } else {
+          message.error('原密码错误,请重试!');
+        }
       })
       console.log(values, formState);
     };

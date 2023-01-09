@@ -96,10 +96,7 @@ import ModifyUserInfo from "@/components/modifyUserInfo";
 import AddTrainForm from "@/components/addTrainForm";
 //左侧菜单选中的key
 let $router = useRouter()
-let user = JSON.parse(localStorage.getItem('user'))
-if (!user) {
-  $router.push('/') //返回登录页面
-}
+
 let selectedKeys = ref(['1'])
 // 是否折叠
 let collapsed = ref(false)

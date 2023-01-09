@@ -26,9 +26,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.path === '/main') {
-        let user = localStorage.getItem('user')
-        if (!user) {
-            router.push('/')
+        let userId = localStorage.getItem('userId')
+        if (!userId) {
+            router.push('/').then(r => {console.log(r)})
         }
     }
     next()

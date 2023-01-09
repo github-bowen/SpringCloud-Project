@@ -88,6 +88,8 @@
 import {cloneDeep} from 'lodash-es';
 import {defineComponent, reactive, ref, toRefs} from 'vue';
 import {SearchOutlined} from '@ant-design/icons-vue';
+import {showTrainReq, delTrainReq, changeTrainReq} from "@/api/train";
+import {message} from "ant-design-vue";
 
 const data = [{
   key: 1,
@@ -311,6 +313,20 @@ export default defineComponent({
       editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
     };
     const save = key => {
+      let pre = dataSource.value.filter(item => key === item.key)[0]
+
+      changeTrainReq('post', {
+        capacity: editableData[key].capacity,
+        startTime: editableData[key].startTime,
+        frequency: editableData[key].frequency
+      }, pre.trainId).then(res => {
+        if (res.data.success) {
+          message.success('修改成功')
+        } else {
+          message.success('修改失败')
+        }
+      })
+
       Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
       delete editableData[key];
     };
@@ -323,6 +339,13 @@ export default defineComponent({
       state.searchedColumn = dataIndex;
     };
     const onDelete = key => {
+      delTrainReq('get', {}, dataSource.value.filter(item => key === item.key)[0].trainId).then(res => {
+        if (res.data.success) {
+          message.success('删除成功')
+        } else {
+          message.success('删除失败')
+        }
+      })
       dataSource.value = dataSource.value.filter(item => item.key !== key);
     };
     const handleReset = clearFilters => {
@@ -347,6 +370,21 @@ export default defineComponent({
       pagination: {pageSizeOptions: ['10', '20', '30', '40', '50'], position: 'topLeft'}
     };
   },
+  mounted() {
+    this.loadInfo()
+  },
+  methods: {
+    loadInfo: function () {
+      showTrainReq('get').then(res => {
+        if (res.data.success) {
+          this.dataSource = ref(res.data.trainInfo);
+          message.success('成功加载车次信息')
+        } else {
+          message.success('加载车次信息失败')
+        }
+      })
+    }
+  }
 });
 </script>
 <style scoped>

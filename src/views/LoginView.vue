@@ -15,7 +15,7 @@
         >
           <a-input v-model:value="formState.username">
             <template #prefix>
-              <UserOutlined class="site-form-item-icon" />
+              <UserOutlined class="site-form-item-icon"/>
             </template>
           </a-input>
         </a-form-item>
@@ -27,7 +27,7 @@
         >
           <a-input-password v-model:value="formState.pwd">
             <template #prefix>
-              <LockOutlined class="site-form-item-icon" />
+              <LockOutlined class="site-form-item-icon"/>
             </template>
           </a-input-password>
         </a-form-item>
@@ -49,7 +49,8 @@
 import {computed, reactive} from "vue";
 import {loginReq} from "@/api/user";
 import {useRouter} from "vue-router"
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import {message} from "ant-design-vue";
+import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
 
 let $router = useRouter()
 
@@ -75,25 +76,21 @@ const onFinish = values => {
     password: formState.pwd
   }).then(res => {
     if (res.data.success) {
-      localStorage.setItem('user', JSON.stringify({
-        token: res.data.token,
-        isAdmin: res.data.isAdmin,
-        userId: res.data.userId
-      }))
-      localStorage.setItem('token', res.data.token)
-      console.log(res.data)
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('userId', res.data.userId)
+      localStorage.setItem('isAdmin', res.data.isAdmin,)
+      console.log(res.data);
+      message.success('登录成功');
+      $router.push('/main');
+    } else {
+      message.error('登录失败,请重试!');
     }
   })
   //  TODO
   localStorage.setItem('isAdmin', 'true')
   localStorage.setItem('userId', '123123')
-  localStorage.setItem('user', JSON.stringify({
-    token: '123123',
-    isAdmin: 'true',
-    userId: '123123',
-  }))
-  $router.push('/main')
   console.log('Success:', values);
+  $router.push('/main')
 };
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo);
