@@ -1,7 +1,8 @@
 <template>
+  <add-train-form></add-train-form>
   <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['name', 'age', 'address'].includes(column.dataIndex)">
+      <template v-if="['startTime', 'frequency', 'capacity'].includes(column.dataIndex)">
         <div>
           <a-input
               v-if="editableData[record.key]"
@@ -32,32 +33,59 @@
 <script>
 import { cloneDeep } from 'lodash-es';
 import { defineComponent, reactive, ref } from 'vue';
+import AddTrainForm from "@/components/addTrainForm";
 const columns = [{
-  title: 'name',
-  dataIndex: 'name',
-  width: '25%',
+  title: '车次ID',
+  dataIndex: 'trainId',
+  key: 'trainId',
+  fixed: true,
 }, {
-  title: 'age',
-  dataIndex: 'age',
-  width: '15%',
+  title: '车次路线',
+  dataIndex: 'route',
+  key: 'route',
 }, {
-  title: 'address',
-  dataIndex: 'address',
-  width: '40%',
+  title: '载客容量',
+  dataIndex: 'capacity',
+  key: 'capacity',
+}, {
+  title: '发车时间',
+  dataIndex: 'startTime',
+  key: 'startTime',
+}, {
+  title: '发车频次',
+  dataIndex: 'frequency',
+  key: 'frequency',
 }, {
   title: 'operation',
   dataIndex: 'operation',
 }];
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+const data = [{
+  key: 1,
+  trainId: '13号线',
+  route: '始发-..经停站加号展开..-终点',
+  capacity: 999,
+  startTime: '4:00',
+  frequency: '5分钟一次',
+  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+}, {
+  key: 2,
+  trainId: '13号线',
+  route: '西直门-...-东直门',
+  capacity: 999,
+  startTime: '4:00',
+  frequency: '5分钟一次',
+  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+}, {
+  key: 3,
+  trainId: '13号线',
+  route: '西直门-...-东直门',
+  capacity: 999,
+  startTime: '4:00',
+  frequency: '5分钟一次',
+  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+}];
 export default defineComponent({
+  components: {AddTrainForm},
   setup() {
     const dataSource = ref(data);
     const editableData = reactive({});
