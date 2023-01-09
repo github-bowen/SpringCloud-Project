@@ -61,6 +61,10 @@ export default defineComponent({
       }
     };
     const rules = {
+      prePass: [{
+        required: true,
+        trigger: 'change',
+      }],
       pass: [{
         required: true,
         validator: validatePass,

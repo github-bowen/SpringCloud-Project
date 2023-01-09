@@ -66,7 +66,9 @@
       <a-layout-content
           :style="{ margin: '10px 16px', padding: '10px', background: '#fff', minHeight: '280px' }">
         <modify-user-info v-if="option===1" class="userInfoComponent"></modify-user-info>
-        <test-component v-else-if="option === 2"></test-component>
+<!--        <test-component v-else-if="option === 2"></test-component>-->
+<!--        <test-component v-else-if="option === 3"></test-component>-->
+        <test-component v-else-if="option === 4"></test-component>
       </a-layout-content>
     </a-layout>
   </a-layout>
