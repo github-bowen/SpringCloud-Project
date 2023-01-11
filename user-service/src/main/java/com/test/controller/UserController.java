@@ -6,9 +6,11 @@ import com.test.entity.User;
 import com.test.service.UserService;
 import netscape.javascript.JSObject;
 import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,9 @@ public class UserController {
 
     @Resource
     UserService service;
+
+    @Autowired
+    HttpServletRequest request;
 
     @RequestMapping("/user/{uid}")
     public User findUserById(@PathVariable("uid") String uid) {
@@ -66,8 +71,24 @@ public class UserController {
         System.out.println(response);
         return response;
     }
-//
-//    @PostMapping("/modifyUserInfo")
-//    public Map<String, Object> modifyUserInfo(@RequestHeader Map)
+
+    @PostMapping("/modifyUserInfo")
+    public Map<String, Object> modifyUserInfo(@RequestBody String reqBody) {
+        Map<String, Object> response = new HashMap<>();
+        System.out.println(reqBody);
+        System.out.println(request.getHeader("Authorization"));
+        JSONObject jsonObject = JSONObject.parseObject(reqBody);
+        String token = request.getHeader("Authorization");
+        String prePwd = jsonObject.getString("prePassword");
+        String pwd = jsonObject.getString("password");
+        User curUser = service.getUserById(token);
+        if (curUser != null && curUser.getPassword().equals(prePwd)) {
+            service.modifyUserInfo(curUser.getUid(), pwd);
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+        }
+        return response;
+    }
 
 }

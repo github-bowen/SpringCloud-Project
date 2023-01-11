@@ -19,6 +19,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void modifyUserInfo(String uid, String pwd) {
+        mapper.modifyUserInfo(uid, pwd);
+    }
+
+    @Override
     public void register(String uid, String pwd) {
         mapper.register(uid, pwd);
     }
