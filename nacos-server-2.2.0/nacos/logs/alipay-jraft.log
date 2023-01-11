@@ -1,0 +1,78 @@
+2023-01-11 19:37:19,536 INFO SPI service [com.alipay.sofa.jraft.JRaftServiceFactory - com.alipay.sofa.jraft.core.DefaultJRaftServiceFactory] loading.
+
+2023-01-11 19:37:19,618 INFO SPI service [com.alipay.sofa.jraft.rpc.RaftRpcFactory - com.alipay.sofa.jraft.rpc.impl.GrpcRaftRpcFactory] loading.
+
+2023-01-11 19:37:19,773 INFO SPI service [com.alipay.sofa.jraft.util.timer.RaftTimerFactory - com.alipay.sofa.jraft.util.timer.DefaultRaftTimerFactory] loading.
+
+2023-01-11 19:37:19,782 INFO The number of active nodes increment to 1.
+
+2023-01-11 19:37:20,059 INFO Starts FSMCaller successfully.
+
+2023-01-11 19:37:20,064 WARN No data for snapshot reader D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_persistent_service_v2\snapshot.
+
+2023-01-11 19:37:20,078 INFO Node <naming_persistent_service_v2/192.168.2.163:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,080 INFO Node <naming_persistent_service_v2/192.168.2.163:7848> start vote and grant vote self, term=0.
+
+2023-01-11 19:37:20,095 WARN Unable to fsync directory D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_persistent_service_v2\meta-data on windows.
+
+2023-01-11 19:37:20,099 INFO Save raft meta, path=D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_persistent_service_v2\meta-data, term=1, votedFor=192.168.2.163:7848, cost time=14 ms
+
+2023-01-11 19:37:20,100 INFO Node <naming_persistent_service_v2/192.168.2.163:7848> become leader of group, term=1, conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,102 INFO -Djraft.recyclers.maxCapacityPerThread: 4096.
+
+2023-01-11 19:37:20,104 WARN RPC server is not started in RaftGroupService.
+
+2023-01-11 19:37:20,104 INFO Start the RaftGroupService successfully.
+
+2023-01-11 19:37:20,114 INFO onLeaderStart: term=1.
+
+2023-01-11 19:37:20,120 INFO The number of active nodes increment to 2.
+
+2023-01-11 19:37:20,161 WARN Channel in TRANSIENT_FAILURE state: 192.168.2.163:7848.
+
+2023-01-11 19:37:20,162 WARN Channel in SHUTDOWN state: 192.168.2.163:7848.
+
+2023-01-11 19:37:20,162 INFO Starts FSMCaller successfully.
+
+2023-01-11 19:37:20,162 WARN No data for snapshot reader D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_instance_metadata\snapshot.
+
+2023-01-11 19:37:20,164 INFO Node <naming_instance_metadata/192.168.2.163:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,165 INFO Node <naming_instance_metadata/192.168.2.163:7848> start vote and grant vote self, term=0.
+
+2023-01-11 19:37:20,168 WARN Unable to fsync directory D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_instance_metadata\meta-data on windows.
+
+2023-01-11 19:37:20,168 INFO Save raft meta, path=D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_instance_metadata\meta-data, term=1, votedFor=192.168.2.163:7848, cost time=3 ms
+
+2023-01-11 19:37:20,168 INFO Node <naming_instance_metadata/192.168.2.163:7848> become leader of group, term=1, conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,169 WARN RPC server is not started in RaftGroupService.
+
+2023-01-11 19:37:20,169 INFO Start the RaftGroupService successfully.
+
+2023-01-11 19:37:20,170 INFO onLeaderStart: term=1.
+
+2023-01-11 19:37:20,174 INFO The number of active nodes increment to 3.
+
+2023-01-11 19:37:20,216 INFO Starts FSMCaller successfully.
+
+2023-01-11 19:37:20,216 WARN No data for snapshot reader D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_service_metadata\snapshot.
+
+2023-01-11 19:37:20,217 INFO Node <naming_service_metadata/192.168.2.163:7848> init, term=0, lastLogId=LogId [index=0, term=0], conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,217 INFO Node <naming_service_metadata/192.168.2.163:7848> start vote and grant vote self, term=0.
+
+2023-01-11 19:37:20,221 WARN Unable to fsync directory D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_service_metadata\meta-data on windows.
+
+2023-01-11 19:37:20,221 INFO Save raft meta, path=D:\MyWorkSpace\Java\project1\ticket-manage-2023\nacos-server-2.2.0\nacos\data\protocol\raft\naming_service_metadata\meta-data, term=1, votedFor=192.168.2.163:7848, cost time=3 ms
+
+2023-01-11 19:37:20,221 INFO Node <naming_service_metadata/192.168.2.163:7848> become leader of group, term=1, conf=192.168.2.163:7848, oldConf=.
+
+2023-01-11 19:37:20,221 WARN RPC server is not started in RaftGroupService.
+
+2023-01-11 19:37:20,221 INFO Start the RaftGroupService successfully.
+
+2023-01-11 19:37:20,223 INFO onLeaderStart: term=1.
+
