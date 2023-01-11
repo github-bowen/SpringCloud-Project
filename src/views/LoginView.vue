@@ -87,10 +87,10 @@ const onFinish = values => {
     }
   })
   //  TODO
-  localStorage.setItem('isAdmin', 'true')
-  localStorage.setItem('userId', '123123')
+  //localStorage.setItem('isAdmin', 'true')
+  //localStorage.setItem('userId', '123123')
   console.log('Success:', values);
-  $router.push('/main')
+  //$router.push('/main')
 };
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo);

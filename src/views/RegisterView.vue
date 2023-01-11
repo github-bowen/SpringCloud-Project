@@ -76,7 +76,7 @@ const onFinish = values => {
       message.error('该用户已存在')
     }
   })
-  $router.push('/')
+  //$router.push('/')
   console.log('Success:', values);
 };
 const onFinishFailed = errorInfo => {

@@ -4,8 +4,8 @@ import axios from 'axios'
 // 创建一个axios实例
 const axiosService = axios.create({
     //网关对应地址
-    baseURL: 'http://192.168.2.163:10000/',
-    timeout: 1000
+    baseURL: 'http://localhost:8888/',
+    timeout: 1000,
 })
 
 // request拦截器

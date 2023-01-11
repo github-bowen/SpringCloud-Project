@@ -48,9 +48,9 @@ export default defineComponent({
       if (value === '') {
         return Promise.reject('Please input the password');
       } else {
-        if (formState.checkPass !== '') {
-          await formRef.value.validateFields('checkPass');
-        }
+        // if (formState.checkPass !== '') {
+        //   await formRef.value.validateFields('checkPass');
+        // }
         return Promise.resolve();
       }
     };
