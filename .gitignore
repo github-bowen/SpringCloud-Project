@@ -33,3 +33,5 @@ build/
 .vscode/
 
 node_modules/*
+
+/nacos-server-2.2.0/

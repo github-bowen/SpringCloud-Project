@@ -38,7 +38,7 @@ public class UserController {
         String uid = jsonObject.getString("userId");
         String pwd = jsonObject.getString("password");
         User curUser = service.getUserById(uid);
-        System.out.println(uid + " " + pwd);
+        System.out.println(uid + " " + pwd + " " + curUser.getPassword());
         if (curUser != null && curUser.getPassword().equals(pwd)) {
             response.put("success", true);
             Map<String, Object> data = new HashMap<>();
