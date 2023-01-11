@@ -38,7 +38,7 @@ public class TrainController {
             final Train train = trains.get(index);
             final String stations = train.getStations();
             String[] stationsSplit = stations.split("[ -_,]");
-            data.add(new HashMap<>() {
+            data.add(new HashMap<String, Object>() {
                 {
                     put("key", index + 1);
                     put("trainId", train.getTid());
