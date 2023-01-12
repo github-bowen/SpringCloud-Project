@@ -3,10 +3,7 @@ package com.test.controller;
 import com.test.entity.Train;
 import com.test.service.TrainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 public class TrainController {
 
     @Resource
@@ -25,10 +21,10 @@ public class TrainController {
     @Autowired
     HttpServletRequest request;
 
-    @RequestMapping("/allTrain")
-    public Map<String ,Object> allTrain(@RequestBody String reqBody) {
-        System.out.printf(reqBody);
-        Map<String ,Object> response = new HashMap<>();
+    @GetMapping("/allTrain")
+    public Map<String, Object> allTrain() {
+        //System.out.println(reqBody);
+        Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> data = new ArrayList<>();
         response.put("success", true);
 
@@ -42,19 +38,19 @@ public class TrainController {
                 {
                     put("key", index + 1);
                     put("trainId", train.getTid());
-                    put("route", stationsSplit[0]);
+                    put("route", stationsSplit[0] + "-" + stationsSplit[stationsSplit.length - 1]);
                     put("capacity", train.getCapacity());
                     put("startTime", train.getStartTime());
                     put("frequency", train.getFrequency());
-                    put("description", stationsSplit[stationsSplit.length - 1]);
+                    put("description", stations);
                 }
             });
         }
 
         response.put("data", data);
+        System.out.println(response);
         return response;
     }
-
 
 
 }

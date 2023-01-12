@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 public class UserController {
 
     @Resource
@@ -30,7 +29,6 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin
     public Map<String, Object> login(@RequestBody String reqBody) {
         System.out.println(reqBody);
         JSONObject jsonObject = JSONObject.parseObject(reqBody);
@@ -38,7 +36,6 @@ public class UserController {
         String uid = jsonObject.getString("userId");
         String pwd = jsonObject.getString("password");
         User curUser = service.getUserById(uid);
-        System.out.println(uid + " " + pwd + " " + curUser.getPassword());
         if (curUser != null && curUser.getPassword().equals(pwd)) {
             response.put("success", true);
             Map<String, Object> data = new HashMap<>();
@@ -46,6 +43,7 @@ public class UserController {
             data.put("userId", uid);
             data.put("isAdmin", curUser.is_admin());
             response.put("data", data);
+            System.out.println(response);
         } else {
             response.put("success", false);
         }
@@ -53,7 +51,6 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @CrossOrigin
     public Map<String, Object> register(@RequestBody String reqBody) {
         System.out.println(reqBody);
         JSONObject jsonObject = JSONObject.parseObject(reqBody);
