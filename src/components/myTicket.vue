@@ -204,8 +204,8 @@ export default defineComponent({
       state.searchText = '';
     };
 
-    const onDelete = (key, key2) => {
-      delTicketReq('get', {}, dataSource.value.filter(item => key === item.key)[0].trainId).then(res => {
+    const onDelete = (ticketId, key2) => {
+      delTicketReq('get', {}, ticketId).then(res => {
         if (res.data.success) {
           message.success('删除成功')
         } else {
