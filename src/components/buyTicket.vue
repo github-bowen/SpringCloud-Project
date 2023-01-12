@@ -41,40 +41,14 @@
     </template>
     <!--    展示数据-->
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['startTime', 'frequency', 'capacity'].includes(column.dataIndex)">
+      <template v-if="['startTime', 'capacity'].includes(column.dataIndex)">
         <div>
-          <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-          />
-          <template v-else>
             {{ text }}
-          </template>
         </div>
       </template>
       <!--      操作-->
       <template v-else-if="column.dataIndex === 'operation'">
-        <div class="editable-row-operations" style="display: inline-flex">
-          <span v-if="editableData[record.key]">
-            <a-typography-link @click="save(record.key)">Save</a-typography-link>
-            <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-              <a>Cancel</a>
-            </a-popconfirm>
-          </span>
-          <span v-else>
-            <a @click="edit(record.key)">Edit</a>
-          </span>
-        </div>
-        <a-popconfirm
-            v-if="dataSource.length"
-            title="Sure to delete?"
-            @confirm="onDelete(record.key)"
-            style="display: inline-flex"
-        >
-          <a>Delete</a>
-        </a-popconfirm>
-
+        <but-ticket-form :trainId = "record.trainId"></but-ticket-form>
       </template>
     </template>
     <template #expandedRowRender="{ record }">
@@ -85,11 +59,12 @@
   </a-table>
 </template>
 <script>
-import {cloneDeep} from 'lodash-es';
+
 import {defineComponent, reactive, ref, toRefs} from 'vue';
 import {SearchOutlined} from '@ant-design/icons-vue';
-import {showTrainReq, delTrainReq, changeTrainReq} from "@/api/train";
+import {showTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
+import ButTicketForm from "@/components/butTicketForm";
 
 let dataInit = []
 showTrainReq('get').then(res => {
@@ -103,7 +78,7 @@ showTrainReq('get').then(res => {
         route: res.data.data[i].route,
         capacity: res.data.data[i].capacity,
         startTime: res.data.data[i].startTime,
-        frequency: res.data.data[i].frequency,
+        // frequency: res.data.data[i].frequency,
         description: res.data.data[i].description,
       });
     }
@@ -116,7 +91,7 @@ showTrainReq('get').then(res => {
 
 console.log("datainit", dataInit);
 export default defineComponent({
-  components: {SearchOutlined},
+  components: {ButTicketForm,  SearchOutlined},
   setup() {
     const state = reactive({
       searchText: '',
@@ -152,7 +127,7 @@ export default defineComponent({
         }
       },
     }, {
-      title: '载客容量',
+      title: '剩余容量',
       dataIndex: 'capacity',
       key: 'capacity',
     }, {
@@ -169,74 +144,37 @@ export default defineComponent({
         }
       },
     }, {
-      title: '发车频次',
-      dataIndex: 'frequency',
-      key: 'frequency',
-    }, {
       title: 'operation',
       dataIndex: 'operation',
     }];
     let dataSource = ref(dataInit);
-    const editableData = reactive({});
-    const edit = key => {
-      editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
-    };
-    const save = key => {
-      let pre = dataSource.value.filter(item => key === item.key)[0]
 
-      changeTrainReq('post', {
-        capacity: editableData[key].capacity,
-        startTime: editableData[key].startTime,
-        frequency: editableData[key].frequency
-      }, pre.trainId).then(res => {
-        if (res.data.success) {
-          message.success('修改成功')
-        } else {
-          message.success('修改失败')
-        }
-      })
-
-      Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-    };
-    const cancel = key => {
-      delete editableData[key];
-    };
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
       state.searchText = selectedKeys[0];
       state.searchedColumn = dataIndex;
     };
-    const onDelete = key => {
-      delTrainReq('get', {}, dataSource.value.filter(item => key === item.key)[0].trainId).then(res => {
-        if (res.data.success) {
-          message.success('删除成功')
-        } else {
-          message.success('删除失败')
-        }
-      })
-      dataSource.value = dataSource.value.filter(item => item.key !== key);
-    };
+
     const handleReset = clearFilters => {
       clearFilters({
         confirm: true,
       });
       state.searchText = '';
     };
+
+    // const buy = key => {
+    //   let pre = dataSource.value.filter(item => key === item.key)[0].trainId;
+    //
+    // };
     return {
       r,
       dataInit,
       dataSource,
       columns,
       editingKey: '',
-      editableData,
-      edit,
-      save,
-      cancel,
       handleSearch,
       handleReset,
       searchInput,
-      onDelete,
       ...toRefs(state),
       pagination: {pageSizeOptions: ['10', '20', '30', '40', '50'], position: 'topLeft'}
     };

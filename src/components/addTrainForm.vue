@@ -56,7 +56,7 @@ import {defineComponent, reactive, ref} from 'vue';
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {addTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
-import {useRouter} from "vue-router";
+import router from '../router'
 
 export default defineComponent({
   components: {
@@ -98,7 +98,7 @@ export default defineComponent({
           message.success('车次添加成功')
           return true;
         } else {
-          message.error('车次添加成功')
+          message.error('车次添加失败')
           return false;
         }
       })
@@ -118,7 +118,7 @@ export default defineComponent({
         /*发送请求,清除表格*/
         visible.value = false;
         clearForm();
-        useRouter().go(0);
+        router.go(0);
       }
     };
 
@@ -130,7 +130,7 @@ export default defineComponent({
         //console.log('dynamicValidateForm:', dynamicValidateForm);
         visible.value = false;
         clearForm();
-        useRouter().go(0);
+        router.go(0);
       }
     };
 

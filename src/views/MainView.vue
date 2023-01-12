@@ -70,8 +70,8 @@
       <a-layout-content
           :style="{ margin: '10px 8px', padding: '0px', background: '#fff', minHeight: '280px' }">
         <modify-user-info v-if="option===1" class="userInfoComponent"></modify-user-info>
-<!--        <test-component v-else-if="option === 2"></test-component>-->
-<!--        <test-component v-else-if="option === 3"></test-component>-->
+        <my-ticket v-else-if="option===2"></my-ticket>
+        <buy-ticket v-else-if="option===3"></buy-ticket>
         <test-component v-else-if="option === 4"></test-component>
       </a-layout-content>
     </a-layout>
@@ -94,6 +94,8 @@ import {useRouter} from "vue-router";
 import TestComponent from "@/components/testComponent";
 import ModifyUserInfo from "@/components/modifyUserInfo";
 import AddTrainForm from "@/components/addTrainForm";
+import BuyTicket from "@/components/buyTicket";
+import MyTicket from "@/components/myTicket";
 //左侧菜单选中的key
 let $router = useRouter()
 

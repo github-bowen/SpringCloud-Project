@@ -3,7 +3,7 @@
            :pagination="pagination" :showQuickJumper="true"
            bordered v-if="r">
     <template #headerCell="{ column }">
-      <template v-if="column.key === 'trainId'">
+      <template v-if="column.key === 'ticketId'">
         <span style="color: #1890ff">Name </span>
       </template>
     </template>
@@ -41,40 +41,21 @@
     </template>
     <!--    展示数据-->
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['startTime', 'frequency', 'capacity'].includes(column.dataIndex)">
+      <template v-if="['ticketId', 'beginStation', 'endStation'].includes(column.dataIndex)">
         <div>
-          <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-          />
-          <template v-else>
-            {{ text }}
-          </template>
+          {{ text }}
         </div>
       </template>
       <!--      操作-->
       <template v-else-if="column.dataIndex === 'operation'">
-        <div class="editable-row-operations" style="display: inline-flex">
-          <span v-if="editableData[record.key]">
-            <a-typography-link @click="save(record.key)">Save</a-typography-link>
-            <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-              <a>Cancel</a>
-            </a-popconfirm>
-          </span>
-          <span v-else>
-            <a @click="edit(record.key)">Edit</a>
-          </span>
-        </div>
         <a-popconfirm
             v-if="dataSource.length"
-            title="Sure to delete?"
-            @confirm="onDelete(record.key)"
+            title="确定要退票吗?"
+            @confirm="onDelete(record.ticketId, record.key)"
             style="display: inline-flex"
         >
-          <a>Delete</a>
+          <a>退票</a>
         </a-popconfirm>
-
       </template>
     </template>
     <template #expandedRowRender="{ record }">
@@ -85,37 +66,49 @@
   </a-table>
 </template>
 <script>
-import {cloneDeep} from 'lodash-es';
+
 import {defineComponent, reactive, ref, toRefs} from 'vue';
 import {SearchOutlined} from '@ant-design/icons-vue';
-import {showTrainReq, delTrainReq, changeTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
+import {delTicketReq, getMyTicket} from "@/api/ticket";
+import router from '../router'
+
 
 let dataInit = []
-showTrainReq('get').then(res => {
+getMyTicket('get').then(res => {
   if (res.data.success) {
     //dataInit = []
     for (let i = 0; i < res.data.data.length; i++) {
       //console.log(res.data.data[i]);
       dataInit.push({
         key: res.data.data[i].key,
+        ticketId: res.data.data[i].ticketId,
         trainId: res.data.data[i].trainId,
-        route: res.data.data[i].route,
-        capacity: res.data.data[i].capacity,
+        beginStation: res.data.data[i].beginStation,
+        endStation: res.data.data[i].endStation,
         startTime: res.data.data[i].startTime,
-        frequency: res.data.data[i].frequency,
         description: res.data.data[i].description,
       });
     }
     console.log(dataInit);
-    message.success('成功加载车次信息')
+    message.success('成功加载车票信息')
   } else {
-    message.success('加载车次信息失败')
+    message.success('加载车票信息失败')
   }
+})
+dataInit.push({
+  key: 1,
+  ticketId: 1,
+  trainId: 'g888',
+  beginStation: '北京',
+  endStation: '东京',
+  startTime: '2022-1-23',
+  description: '北京-南京-东京-西京',
 })
 
 console.log("datainit", dataInit);
 export default defineComponent({
+  // eslint-disable-next-line vue/no-unused-components
   components: {SearchOutlined},
   setup() {
     const state = reactive({
@@ -125,6 +118,20 @@ export default defineComponent({
     const searchInput = ref();
     let r = true;
     const columns = [{
+      title: '车票ID',
+      dataIndex: 'ticketId',
+      key: 'ticketId',
+      fixed: true,
+      customFilterDropdown: true,
+      onFilter: (value, record) => record.ticketId.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilterDropdownVisibleChange: visible => {
+        if (visible) {
+          setTimeout(() => {
+            searchInput.value.focus();
+          }, 100);
+        }
+      },
+    },{
       title: '车次ID',
       dataIndex: 'trainId',
       key: 'trainId',
@@ -139,11 +146,12 @@ export default defineComponent({
         }
       },
     }, {
-      title: '车次路线',
-      dataIndex: 'route',
-      key: 'route',
+      title: '出发站',
+      dataIndex: 'beginStation',
+      key: 'beginStation',
+      fixed: true,
       customFilterDropdown: true,
-      onFilter: (value, record) => record.route.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value, record) => record.beginStation.toString().toLowerCase().includes(value.toLowerCase()),
       onFilterDropdownVisibleChange: visible => {
         if (visible) {
           setTimeout(() => {
@@ -152,10 +160,19 @@ export default defineComponent({
         }
       },
     }, {
-      title: '载客容量',
-      dataIndex: 'capacity',
-      key: 'capacity',
-    }, {
+      title: '目的地',
+      dataIndex: 'endStation',
+      key: 'endStation',
+      customFilterDropdown: true,
+      onFilter: (value, record) => record.endStation.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilterDropdownVisibleChange: visible => {
+        if (visible) {
+          setTimeout(() => {
+            searchInput.value.focus();
+          }, 100);
+        }
+      },
+    },{
       title: '发车时间',
       dataIndex: 'startTime',
       key: 'startTime',
@@ -169,74 +186,47 @@ export default defineComponent({
         }
       },
     }, {
-      title: '发车频次',
-      dataIndex: 'frequency',
-      key: 'frequency',
-    }, {
       title: 'operation',
       dataIndex: 'operation',
     }];
     let dataSource = ref(dataInit);
-    const editableData = reactive({});
-    const edit = key => {
-      editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
-    };
-    const save = key => {
-      let pre = dataSource.value.filter(item => key === item.key)[0]
 
-      changeTrainReq('post', {
-        capacity: editableData[key].capacity,
-        startTime: editableData[key].startTime,
-        frequency: editableData[key].frequency
-      }, pre.trainId).then(res => {
-        if (res.data.success) {
-          message.success('修改成功')
-        } else {
-          message.success('修改失败')
-        }
-      })
-
-      Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-    };
-    const cancel = key => {
-      delete editableData[key];
-    };
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
       state.searchText = selectedKeys[0];
       state.searchedColumn = dataIndex;
     };
-    const onDelete = key => {
-      delTrainReq('get', {}, dataSource.value.filter(item => key === item.key)[0].trainId).then(res => {
-        if (res.data.success) {
-          message.success('删除成功')
-        } else {
-          message.success('删除失败')
-        }
-      })
-      dataSource.value = dataSource.value.filter(item => item.key !== key);
-    };
+
     const handleReset = clearFilters => {
       clearFilters({
         confirm: true,
       });
       state.searchText = '';
     };
+
+    const onDelete = (key, key2) => {
+      delTicketReq('get', {}, dataSource.value.filter(item => key === item.key)[0].trainId).then(res => {
+        if (res.data.success) {
+          message.success('删除成功')
+        } else {
+          message.success('删除失败')
+        }
+      },)
+      dataSource.value = dataSource.value.filter(item => item.key !== key2);
+      dataInit = dataInit.filter(item => item.key !== key2);
+      router.go(0);
+    };
+
     return {
       r,
+      onDelete,
       dataInit,
       dataSource,
       columns,
       editingKey: '',
-      editableData,
-      edit,
-      save,
-      cancel,
       handleSearch,
       handleReset,
       searchInput,
-      onDelete,
       ...toRefs(state),
       pagination: {pageSizeOptions: ['10', '20', '30', '40', '50'], position: 'topLeft'}
     };
@@ -246,32 +236,31 @@ export default defineComponent({
   },
   methods: {
     loadInfo: function () {
-      showTrainReq('get').then(res => {
+      getMyTicket('get').then(res => {
         if (res.data.success) {
-          dataInit = []
+          //dataInit = []
           for (let i = 0; i < res.data.data.length; i++) {
             //console.log(res.data.data[i]);
             dataInit.push({
               key: res.data.data[i].key,
+              ticketId: res.data.data[i].ticketId,
               trainId: res.data.data[i].trainId,
-              route: res.data.data[i].route,
-              capacity: res.data.data[i].capacity,
+              beginStation: res.data.data[i].beginStation,
+              endStation: res.data.data[i].endStation,
               startTime: res.data.data[i].startTime,
-              frequency: res.data.data[i].frequency,
               description: res.data.data[i].description,
             });
           }
-          this.rerender();
           //console.log(dataInit);
-          //message.success('成功加载车次信息')
+          message.success('成功加载车票信息')
         } else {
-          message.success('加载车次信息失败')
+          message.success('加载车票信息失败')
         }
       })
     },
-    rerender(){
+    rerender() {
       this.r = false;
-      this.$nextTick(()=>this.r = true)
+      this.$nextTick(() => this.r = true)
     }
   }
 });

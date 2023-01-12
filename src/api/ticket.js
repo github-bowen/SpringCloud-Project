@@ -13,6 +13,11 @@ export async function delTicketReq(method, params, ticketId) {
     return request(url, method, params);
 }
 
+export async function getMyTicket(method, params) {
+    const url = '/myTicket'
+    return request(url, method, params);
+}
+
 export async function ticketDetailReq(method, params, ticketId) {
     //车票信息
     const url = `/ticketDetail/${ticketId}`;
