@@ -14,6 +14,8 @@ public interface TicketService {
 
     void addTicket(String userId, String trainId, String startStation, String endStation);
 
+    void deleteTicket(String ticketId);
+
     List<Ticket> getTicketsByUserId(String userId);
 
 }

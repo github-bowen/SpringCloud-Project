@@ -25,19 +25,28 @@ public class TrainController {
     // 新增，用于从 TicketController 访问
     @PostMapping("/train/return-ticket/{trainId}")
     public void returnTicket(@PathVariable("trainId") String tid) {
+        System.out.println("\n");
+        logTitle("TrainController::returnTicket()");
         service.returnTicket(tid);
     }
 
     // 新增，用于从 TicketController 访问
     @PostMapping("/train/try-selling-ticket/{trainId}")
     public void trySellingTicket(@PathVariable("trainId") String tid) {
+        System.out.println("\n");
+        logTitle("TrainController::trySellingTicket()");
         service.trySellingTicket(tid);  // remain 约束 unsigned，抛异常
     }
 
     // 新增，用于从 TicketController 访问
-    @GetMapping("/train/{trainId}")
+    @RequestMapping("/train/{trainId}")
     public Train queryTrain(@PathVariable("trainId") String tid) {
-        return service.getTrainById(tid);
+        System.out.println("\n");
+        logTitle("TrainController::queryTrain()");
+        logContent("车次id: " + tid);
+        Train train = service.getTrainById(tid);
+        logContent("Train: " + train);
+        return train;
     }
 
     @GetMapping("/allTrain")
@@ -92,8 +101,11 @@ public class TrainController {
         return response;
     }
 
-    @GetMapping("/delTrain/{trainId}")
+    @RequestMapping("/delTrain/{trainId}")
     public Map<String, Object> delTrain(@PathVariable(name = "trainId") String tid) {
+        System.out.println("\n");
+        logTitle("TrainController::delTrain()");
+        logContent("train id: " + tid);
         Map<String, Object> response = new HashMap<>();
         try {
             service.deleteTrain(tid);
@@ -101,7 +113,7 @@ public class TrainController {
         } catch (Exception E) {
             response.put("success", false);
         }
-        System.out.println("del: " +tid + " , " + response);
+        logContent("del: " +tid + " , " + response);
         return response;
     }
 
@@ -121,5 +133,13 @@ public class TrainController {
             response.put("success", false);
         }
         return response;
+    }
+
+    private static void logContent(String s) {
+        System.out.println("\33[1m\33[35m" + "### " + s + " ###");
+    }
+
+    private static void logTitle(String s) {
+        System.out.println("\33[1m\33[34m" + "### " + s + " ###");
     }
 }
