@@ -48,7 +48,7 @@
       </template>
       <!--      操作-->
       <template v-else-if="column.dataIndex === 'operation'">
-        <but-ticket-form :trainId = "record.trainId"></but-ticket-form>
+        <but-ticket-form :trainId = "record.trainId" :trainRoute = "record.description"></but-ticket-form>
       </template>
     </template>
     <template #expandedRowRender="{ record }">
@@ -118,7 +118,7 @@ export default defineComponent({
       dataIndex: 'route',
       key: 'route',
       customFilterDropdown: true,
-      onFilter: (value, record) => record.route.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value, record) => record.description.toString().toLowerCase().includes(value.toLowerCase()),
       onFilterDropdownVisibleChange: visible => {
         if (visible) {
           setTimeout(() => {

@@ -8,7 +8,8 @@
           :model="dynamicValidateForm"
           @finish="onFinish"
       >
-        <a-comment>车次ID: {{ train_id }}</a-comment>
+        <a-comment style="display:inline-flex;">车次ID: {{ train_id }}</a-comment>
+        <a-comment style="display:inline-flex;">车次路线: {{ train_route }}</a-comment>
         <a-form-item label="起始站" :rules="{required: true}">
           <a-input v-model:value="dynamicValidateForm.beginStation"/>
         </a-form-item>
@@ -30,7 +31,8 @@ import {addTicketReq} from "@/api/ticket";
 
 export default defineComponent({
   props: {
-    trainId: String
+    trainId: String,
+    trainRoute:String
   },
   // eslint-disable-next-line no-unused-vars
   setup(props, context) {
@@ -43,9 +45,11 @@ export default defineComponent({
       beginStation: '',
       endStation: ''
     });
-    console.log("props",props)
+    // console.log("props",props)
     // eslint-disable-next-line vue/no-setup-props-destructure
     const train_id = props.trainId;
+    // eslint-disable-next-line vue/no-setup-props-destructure
+    const train_route = props.trainRoute;
 
     const sendAddRequest = async () => {
 
@@ -101,6 +105,7 @@ export default defineComponent({
       formRef,
       dynamicValidateForm,
       onFinish,
+      train_route
     };
   },
 });
