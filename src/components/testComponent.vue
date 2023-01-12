@@ -91,40 +91,62 @@ import {SearchOutlined} from '@ant-design/icons-vue';
 import {showTrainReq, delTrainReq, changeTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
 
-let dataInit = [{
-  key: 1,
-  trainId: '13号线',
-  route: '始发-..经停站加号展开..-终点',
-  capacity: 999,
-  startTime: '4:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 2,
-  trainId: '2',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '5:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 3,
-  trainId: '3',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 4,
-  trainId: '4',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-},
-];
+// let dataInit = [{
+//   key: 1,
+//   trainId: '13号线',
+//   route: '始发-..经停站加号展开..-终点',
+//   capacity: 999,
+//   startTime: '4:00',
+//   frequency: '5分钟一次',
+//   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+// }, {
+//   key: 2,
+//   trainId: '2',
+//   route: '西直门-...-东直门',
+//   capacity: 999,
+//   startTime: '5:00',
+//   frequency: '5分钟一次',
+//   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+// }, {
+//   key: 3,
+//   trainId: '3',
+//   route: '西直门-...-东直门',
+//   capacity: 999,
+//   startTime: '6:00',
+//   frequency: '5分钟一次',
+//   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+// }, {
+//   key: 4,
+//   trainId: '4',
+//   route: '西直门-...-东直门',
+//   capacity: 999,
+//   startTime: '6:00',
+//   frequency: '5分钟一次',
+//   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
+// },
+// ];
+let dataInit = []
+showTrainReq('get').then(res => {
+  if (res.data.success) {
+    //dataInit = []
+    for (let i = 0; i < res.data.data.length; i++) {
+      console.log(res.data.data[i]);
+      dataInit.push({
+        key: res.data.data[i].key,
+        trainId: res.data.data[i].trainId,
+        route: res.data.data[i].route,
+        capacity: res.data.data[i].capacity,
+        startTime: res.data.data[i].startTime,
+        frequency: res.data.data[i].frequency,
+        description: res.data.data[i].description,
+      });
+    }
+    console.log(dataInit);
+    message.success('成功加载车次信息')
+  } else {
+    message.success('加载车次信息失败')
+  }
+})
 
 console.log("datainit", dataInit);
 export default defineComponent({
@@ -274,8 +296,8 @@ export default defineComponent({
             });
           }
           this.rerender();
-          console.log(dataInit);
-          message.success('成功加载车次信息')
+          //console.log(dataInit);
+          //message.success('成功加载车次信息')
         } else {
           message.success('加载车次信息失败')
         }
