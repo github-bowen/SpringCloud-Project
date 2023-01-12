@@ -91,7 +91,7 @@ import {SearchOutlined} from '@ant-design/icons-vue';
 import {showTrainReq, delTrainReq, changeTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
 
-const data = [{
+let dataInit = [{
   key: 1,
   trainId: '13号线',
   route: '始发-..经停站加号展开..-终点',
@@ -123,129 +123,9 @@ const data = [{
   startTime: '6:00',
   frequency: '5分钟一次',
   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 5,
-  trainId: '5',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 6,
-  trainId: '6',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 7,
-  trainId: '7',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 8,
-  trainId: '8',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 9,
-  trainId: '9',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-}, {
-  key: 10,
-  trainId: '10',
-  route: '西直门-...-东直门',
-  capacity: 999,
-  startTime: '6:00',
-  frequency: '5分钟一次',
-  description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
 },
-  {
-    key: 11,
-    trainId: '2',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '5:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 12,
-    trainId: '3',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 13,
-    trainId: '4',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 14,
-    trainId: '5',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 15,
-    trainId: '6',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 16,
-    trainId: '7',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 17,
-    trainId: '8',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 18,
-    trainId: '9',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  }, {
-    key: 19,
-    trainId: '10',
-    route: '西直门-...-东直门',
-    capacity: 999,
-    startTime: '6:00',
-    frequency: '5分钟一次',
-    description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
-  },
 ];
+console.log("datainit", dataInit);
 export default defineComponent({
   components: {SearchOutlined},
   setup() {
@@ -306,8 +186,28 @@ export default defineComponent({
       title: 'operation',
       dataIndex: 'operation',
     }];
-
-    const dataSource = ref(data);
+    showTrainReq('get').then(res => {
+      if (res.data.success) {
+        dataInit = []
+        for (let i = 0; i < res.data.data.length; i++) {
+          console.log(res.data.data[i]);
+          dataInit.push({
+            key: res.data.data[i].key,
+            trainId: res.data.data[i].trainId,
+            route: res.data.data[i].route,
+            capacity: res.data.data[i].capacity,
+            startTime: res.data.data[i].startTime,
+            frequency: res.data.data[i].frequency,
+            description: res.data.data[i].description,
+          });
+        }
+        console.log(dataInit);
+        message.success('成功加载车次信息')
+      } else {
+        message.success('加载车次信息失败')
+      }
+    })
+    let dataSource = ref(dataInit);
     const editableData = reactive({});
     const edit = key => {
       editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
@@ -355,6 +255,7 @@ export default defineComponent({
       state.searchText = '';
     };
     return {
+      //data,
       dataSource,
       columns,
       editingKey: '',
@@ -371,12 +272,14 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.loadInfo()
+    //this.loadInfo()
   },
   methods: {
     loadInfo: function () {
       showTrainReq('get').then(res => {
         if (res.data.success) {
+          console.log(res.data.data)
+          this.data = res.data.data;
           this.dataSource = ref(res.data.data);
           message.success('成功加载车次信息')
         } else {
