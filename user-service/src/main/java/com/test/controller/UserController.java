@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +23,18 @@ public class UserController {
 
     @Autowired
     HttpServletRequest request;
+
+    @RequestMapping("/all-users")
+    public List<User> allUsers() {
+        return service.allUsers();
+    }
+
+    // 新增，从 TicketController 中调用，获取当前登录用户的信息
+    @GetMapping("/current-user")
+    public User currentUser() {
+        String userId = request.getHeader("Authorization");
+        return service.getUserById(userId);
+    }
 
     @RequestMapping("/user/{uid}")
     public User findUserById(@PathVariable("uid") String uid) {

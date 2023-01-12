@@ -39,4 +39,16 @@ public class TrainServiceImpl implements TrainService {
     public void modifyTrain(String tid, int capacity, String startTime, String frequency) {
         trainMapper.modifyTrain(tid, capacity, startTime, frequency);
     }
+
+    // 尝试将 tid 对应的车次的剩余票数减一，如果剩余车票为负数抛出异常
+    @Override
+    public void trySellingTicket(String tid) {
+        trainMapper.trySellingTicket(tid);
+    }
+
+    // 退票，remain + 1
+    @Override
+    public void returnTicket(String tid) {
+        trainMapper.returnTicket(tid);
+    }
 }

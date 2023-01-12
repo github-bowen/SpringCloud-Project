@@ -6,6 +6,7 @@ import com.test.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyUserInfo(String uid, String pwd) {
         mapper.modifyUserInfo(uid, pwd);
+    }
+
+    @Override
+    public List<User> allUsers() {
+        return mapper.allUsers();
     }
 
     @Override

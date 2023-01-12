@@ -29,4 +29,12 @@ public interface TrainMapper {
             "where tid = #{tid}")
     void modifyTrain(String tid, int capacity, String startTime, String frequency);
 
+    // 尝试将 tid 对应的车次的剩余票数减一，如果剩余车票为负数抛出异常
+    @Update("update db_train set remain = remain - 1 where tid = #{tid}")
+    void trySellingTicket(String tid);
+
+    // 退票，remain + 1
+    @Update("update db_train set remain = remain + 1 where tid = #{tid}")
+    void returnTicket(String tid);
+
 }

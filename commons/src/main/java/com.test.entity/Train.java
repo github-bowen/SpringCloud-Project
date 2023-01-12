@@ -9,5 +9,6 @@ public class Train {
     int capacity;
     String startTime;
     String frequency;
+    // 该属性在数据库中要求非负数 (`remain` int unsigned NOT NULL)
     int remain;
 }

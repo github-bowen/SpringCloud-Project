@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     @Select("select * from db_user where uid = #{uid}")
@@ -16,4 +18,7 @@ public interface UserMapper {
 
     @Update("update db_user set password = #{pwd} where uid = #{uid}\n")
     void modifyUserInfo(String uid, String pwd);
+
+    @Select("select * from db_user")
+    List<User> allUsers();
 }

@@ -7,4 +7,4 @@ spring:
     nacos:
       config:
         file-extension: yml
-        server-addr: localhost:8848 # TODO: 不知道这个配啥
+        server-addr: localhost:8848

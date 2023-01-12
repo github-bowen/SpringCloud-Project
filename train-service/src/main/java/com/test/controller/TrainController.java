@@ -22,6 +22,24 @@ public class TrainController {
     @Autowired
     HttpServletRequest request;
 
+    // 新增，用于从 TicketController 访问
+    @PostMapping("/train/return-ticket/{trainId}")
+    public void returnTicket(@PathVariable("trainId") String tid) {
+        service.returnTicket(tid);
+    }
+
+    // 新增，用于从 TicketController 访问
+    @PostMapping("/train/try-selling-ticket/{trainId}")
+    public void trySellingTicket(@PathVariable("trainId") String tid) {
+        service.trySellingTicket(tid);  // remain 约束 unsigned，抛异常
+    }
+
+    // 新增，用于从 TicketController 访问
+    @GetMapping("/train/{trainId}")
+    public Train queryTrain(@PathVariable("trainId") String tid) {
+        return service.getTrainById(tid);
+    }
+
     @GetMapping("/allTrain")
     public Map<String, Object> allTrain() {
         //System.out.println(reqBody);

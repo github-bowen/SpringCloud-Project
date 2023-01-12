@@ -59,7 +59,7 @@ CREATE TABLE `db_train` (
   `capacity` int NOT NULL,
   `startTime` date NOT NULL,
   `frequency` varchar(32) NOT NULL,
-  `remain` int NOT NULL,
+  `remain` int unsigned NOT NULL,
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

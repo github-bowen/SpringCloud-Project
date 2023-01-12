@@ -1,6 +1,8 @@
 package com.test.service;
 
-import sun.security.krb5.internal.Ticket;
+import com.test.entity.Ticket;
+
+import java.util.List;
 
 public interface TicketService {
 
@@ -8,8 +10,10 @@ public interface TicketService {
 
     String getStartStationByTicketId(String ticketId);
 
-    String getTrainByTickedTicketId(String ticketId);
+    String getTrainIdByTickedTicketId(String ticketId);
 
-    String purchaseTicket(String ticketId);
+    void addTicket(String userId, String trainId, String startStation, String endStation);
+
+    List<Ticket> getTicketsByUserId(String userId);
 
 }
