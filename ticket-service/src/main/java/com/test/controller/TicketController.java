@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +56,8 @@ public class TicketController {
         }
 
         // 购票成功，创建新的订单 ticket
-        User currentUser = currentUser();
         try {
-            service.addTicket(currentUser.getUid(), trainId, startStation, endStation);
+            service.addTicket(currentUserId(), trainId, startStation, endStation);
         } catch (Exception e) {
             response.put("success", false);
             return response;
@@ -107,7 +105,7 @@ public class TicketController {
     public Map<String, Object> userTickets() {
         Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> data = service.getTicketsByUserId(
-                currentUser().getUid()).stream().map(ticket ->
+                currentUserId()).stream().map(ticket ->
         {
             assert ticket != null;
             final String queryTrainUrl = TRAIN_URL + "/train/" + ticket.getTrainId();
@@ -127,10 +125,7 @@ public class TicketController {
         return response;
     }
 
-    private User currentUser() {
-        String currentUserUrl = USER_URL + "/current-user";
-        User user = restTemplate.getForObject(currentUserUrl, User.class);
-        System.out.println(user);
-        return user;
+    private String currentUserId() {
+        return request.getHeader("Authorization");
     }
 }
