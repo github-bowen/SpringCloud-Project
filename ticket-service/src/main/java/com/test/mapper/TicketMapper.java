@@ -20,6 +20,9 @@ public interface TicketMapper {
     @Select("select trainId from db_ticket where ticket_id = #{ticketId}")
     String getTrainIdByTickedTicketId(String ticketId);
 
+    @Delete("delete from db_ticket where ticket_id = #{ticket_id}")
+    void deleteTicket(int ticket_id);
+
     @Insert("insert into db_ticket (user_id, train_id, startStation, endStation) " +
             "values (#{userId}, #{trainId}, #{startStation}, #{endStation});")
     void addTicket(String userId, String trainId, String startStation, String endStation);

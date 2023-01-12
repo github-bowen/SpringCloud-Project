@@ -71,6 +71,7 @@ public class TrainController {
                     put("startTime", train.getStartTime());
                     put("frequency", train.getFrequency());
                     put("description", stations);
+                    put("remain", train.getRemain());
                 }
             });
         }

@@ -3,6 +3,7 @@ package com.test.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.test.entity.*;
 import com.test.service.TicketService;
+import com.test.service.client.TrainClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 @RestController
 public class TicketController {
 
-    public static final String TRAIN_URL = "http://localhost:8103";
-
-    public static final String USER_URL = "http://localhost:8101";
+//    public static final String TRAIN_URL = "http://localhost:8103";
+//
+//    public static final String USER_URL = "http://localhost:8101";
 
     @Resource
     TicketService service;
+    @Resource
+    TrainClient trainClient;
 
     @Autowired
     HttpServletRequest request;
@@ -50,8 +53,9 @@ public class TicketController {
         // 如果成功，再向 db_ticket 里面插入新的 ticket
 
         try {
-            String trySellingTicketUrl = TRAIN_URL + "/train/try-selling-ticket/" + trainId;
-            restTemplate.postForObject(trySellingTicketUrl, null, JSONObject.class);
+            //String trySellingTicketUrl = TRAIN_URL + "/train/try-selling-ticket/" + trainId;
+            //restTemplate.postForObject(trySellingTicketUrl, null, JSONObject.class);
+            trainClient.trySellingTicket(trainId);
         } catch (Exception e) {
 //            e.printStackTrace();
             response.put("success", false);
@@ -59,8 +63,9 @@ public class TicketController {
         }
 
         // 购票成功，创建新的订单 ticket
+        String token = request.getHeader("Authorization");
         try {
-            service.addTicket(currentUserId(), trainId, startStation, endStation);
+            service.addTicket(token, trainId, startStation, endStation);
         } catch (Exception e) {
             System.err.println("添加 ticket 失败 (userId: " + currentUserId() + ", trainId: " + trainId + ", startStation: "
                 + startStation + ", endStation: " + endStation + ")");
@@ -75,20 +80,37 @@ public class TicketController {
     }
 
     // 退票
-    @RequestMapping("/delTicket/{ticketId}")
+//    @RequestMapping("/delTicket/{ticketId}")
+    @GetMapping("/delTicket/{ticketId}")
     public Map<String, Object> delTicket(@PathVariable(name = "ticketId") String ticketId) {
         System.out.println("\n");
         logTitle("TicketController::delTicket()");
         Ticket ticket = service.getTicketByTicketId(ticketId);
-        String returnTicketUrl = TRAIN_URL + "/train/return-ticket/" + ticket.getTrain_id();
-        restTemplate.postForObject(returnTicketUrl, null, JSONObject.class);
 
-        service.deleteTicket(ticketId);
+//        String returnTicketUrl = TRAIN_URL + "/train/return-ticket/" + ticket.getTrain_id();
+//        restTemplate.postForObject(returnTicketUrl, null, JSONObject.class);
+//
+//        service.deleteTicket(ticketId);
+//
+//        logContent("成功删除 ticket (" + ticket + ")");
+//        return new HashMap<String, Object>() {{
+//            put("success", true);
+//        }};
 
-        logContent("成功删除 ticket (" + ticket + ")");
-        return new HashMap<String, Object>() {{
-            put("success", true);
-        }};
+        //String returnTicketUrl = TRAIN_URL + "/train/return-ticket/" + ticket.getTrainId();
+        //restTemplate.postForObject(returnTicketUrl, null, JSONObject.class);
+        try {
+            trainClient.returnTicket(ticketId);
+            service.deleteTicket(String.valueOf(Integer.parseInt(ticketId)));
+            return new HashMap<String, Object>() {{
+                put("success", true);
+            }};
+        }catch (Exception e) {
+            return new HashMap<String, Object>() {{
+                put("success", false);
+            }};
+        }
+
     }
 
     // 获取个人车票
@@ -119,14 +141,24 @@ public class TicketController {
         System.out.println("\n");
         logTitle("TicketController::userTickets()");
         Map<String, Object> response = new HashMap<>();
+
         logContent("显示该用户所有车次：");
+
+        String token = request.getHeader("Authorization");
+        logContent("myTicket: userId is :" + token);
+        logContent(service.getTicketByTicketId(token).toString());
+
         List<Map<String, Object>> data = service.getTicketsByUserId(
-                currentUserId()).stream().map(ticket ->
+                token).stream().map(ticket ->
         {
             assert ticket != null;
+
             logContent("\tticket: " + ticket);
-            final String queryTrainUrl = TRAIN_URL + "/train/" + ticket.getTrain_id();
-            final Train train = restTemplate.getForObject(queryTrainUrl, Train.class);
+
+            //final String queryTrainUrl = TRAIN_URL + "/train/" + ticket.getTrain_id();
+            //final Train train = restTemplate.getForObject(queryTrainUrl, Train.class);
+            final Train train = trainClient.queryTrain(ticket.getTrain_id());
+
             return new HashMap<String, Object>() {{
                 put("ticketId", ticket.getTicket_id());
                 put("beginStation", ticket.getStartStation());
@@ -144,6 +176,7 @@ public class TicketController {
         return response;
     }
 
+
     private String currentUserId() {
         return request.getHeader("Authorization");
     }
@@ -155,4 +188,5 @@ public class TicketController {
     private static void logTitle(String s) {
         System.out.println("\33[1m\33[34m" + "### " + s + " ###");
     }
+
 }

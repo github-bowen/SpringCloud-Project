@@ -18,4 +18,6 @@ public interface TicketService {
 
     List<Ticket> getTicketsByUserId(String userId);
 
+    void deleteTicket(int ticketId);
+
 }
