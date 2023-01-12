@@ -1,13 +1,11 @@
 package com.test.mapper;
 
 import com.test.entity.Train;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+@Mapper
 public interface TrainMapper {
 
     @Select("select * from db_train where tid = #{tid}")

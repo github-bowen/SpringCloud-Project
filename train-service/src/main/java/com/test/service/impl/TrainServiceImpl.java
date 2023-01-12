@@ -3,10 +3,12 @@ package com.test.service.impl;
 import com.test.entity.Train;
 import com.test.mapper.TrainMapper;
 import com.test.service.TrainService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Service
 public class TrainServiceImpl implements TrainService {
 
     @Resource
