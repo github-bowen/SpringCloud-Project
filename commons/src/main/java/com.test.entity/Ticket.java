@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class Ticket {
 
-    String ticketId;
-    String userId;
-    String trainId;
+    String ticket_id;
+    String user_id;
+    String train_id;
     String startStation;
     String endStation;
 }

@@ -3,6 +3,7 @@ package com.test.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.test.entity.*;
 import com.test.service.TicketService;
+import com.test.service.client.TrainClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 @RestController
 public class TicketController {
 
-    public static final String TRAIN_URL = "http://localhost:8103";
-
-    public static final String USER_URL = "http://localhost:8101";
+//    public static final String TRAIN_URL = "http://localhost:8103";
+//
+//    public static final String USER_URL = "http://localhost:8101";
 
     @Resource
     TicketService service;
+    @Resource
+    TrainClient trainClient;
 
     @Autowired
     HttpServletRequest request;
@@ -48,16 +51,18 @@ public class TicketController {
         // 如果成功，再向 db_ticket 里面插入新的 ticket
 
         try {
-            String trySellingTicketUrl = TRAIN_URL + "/train/try-selling-ticket/" + trainId;
-            restTemplate.postForObject(trySellingTicketUrl, null, JSONObject.class);
+            //String trySellingTicketUrl = TRAIN_URL + "/train/try-selling-ticket/" + trainId;
+            //restTemplate.postForObject(trySellingTicketUrl, null, JSONObject.class);
+            trainClient.trySellingTicket(trainId);
         } catch (Exception e) {
             response.put("success", false);
             return response;
         }
 
         // 购票成功，创建新的订单 ticket
+        String token = request.getHeader("Authorization");
         try {
-            service.addTicket(currentUserId(), trainId, startStation, endStation);
+            service.addTicket(token, trainId, startStation, endStation);
         } catch (Exception e) {
             response.put("success", false);
             return response;
@@ -67,16 +72,23 @@ public class TicketController {
     }
 
     // 退票
-    @PostMapping("/delTicket/{ticketId}")
+    @GetMapping("/delTicket/{ticketId}")
     public Map<String, Object> delTicket(@PathVariable(name = "ticketId") String ticketId) {
 
         Ticket ticket = service.getTicketByTicketId(ticketId);
-        String returnTicketUrl = TRAIN_URL + "/train/return-ticket/" + ticket.getTrainId();
-        restTemplate.postForObject(returnTicketUrl, null, JSONObject.class);
-
-        return new HashMap<String, Object>() {{
-            put("success", true);
-        }};
+        //String returnTicketUrl = TRAIN_URL + "/train/return-ticket/" + ticket.getTrainId();
+        //restTemplate.postForObject(returnTicketUrl, null, JSONObject.class);
+        try {
+            trainClient.returnTicket(ticketId);
+            service.deleteTicket(Integer.parseInt(ticketId));
+            return new HashMap<String, Object>() {{
+                put("success", true);
+            }};
+        }catch (Exception e) {
+            return new HashMap<String, Object>() {{
+                put("success", false);
+            }};
+        }
     }
 
     // 获取个人车票
@@ -104,17 +116,21 @@ public class TicketController {
     @RequestMapping("/myTicket")
     public Map<String, Object> userTickets() {
         Map<String, Object> response = new HashMap<>();
+        String token = request.getHeader("Authorization");
+        System.out.println("myTicket: token is :" + token);
+        System.out.println(service.getTicketByTicketId(token));
         List<Map<String, Object>> data = service.getTicketsByUserId(
-                currentUserId()).stream().map(ticket ->
+                token).stream().map(ticket ->
         {
             assert ticket != null;
-            final String queryTrainUrl = TRAIN_URL + "/train/" + ticket.getTrainId();
-            final Train train = restTemplate.getForObject(queryTrainUrl, Train.class);
+            //final String queryTrainUrl = TRAIN_URL + "/train/" + ticket.getTrain_id();
+            //final Train train = restTemplate.getForObject(queryTrainUrl, Train.class);
+            final Train train = trainClient.queryTrain(ticket.getTrain_id());
             return new HashMap<String, Object>() {{
-                put("ticketId", ticket.getTicketId());
+                put("ticketId", ticket.getTicket_id());
                 put("beginStation", ticket.getStartStation());
                 put("endStation", ticket.getEndStation());
-                put("trainId", ticket.getTrainId());
+                put("trainId", ticket.getTrain_id());
                 put("startTime", train.getStartTime());
                 put("description", train.getStations());
             }};
@@ -125,7 +141,10 @@ public class TicketController {
         return response;
     }
 
-    private String currentUserId() {
-        return request.getHeader("Authorization");
-    }
+//    private User currentUser() {
+//        String currentUserUrl = USER_URL + "/current-user";
+//        User user = restTemplate.getForObject(currentUserUrl, User.class);
+//        System.out.println(user);
+//        return user;
+//    }
 }
