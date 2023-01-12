@@ -75,7 +75,7 @@ import router from '../router'
 
 
 let dataInit = []
-getMyTicket('get').then(res => {
+getMyTicket('get', {}).then(res => {
   if (res.data.success) {
     //dataInit = []
     for (let i = 0; i < res.data.data.length; i++) {
@@ -96,15 +96,15 @@ getMyTicket('get').then(res => {
     message.success('加载车票信息失败')
   }
 })
-dataInit.push({
-  key: 1,
-  ticketId: 1,
-  trainId: 'g888',
-  beginStation: '北京',
-  endStation: '东京',
-  startTime: '2022-1-23',
-  description: '北京-南京-东京-西京',
-})
+// dataInit.push({
+//   key: 1,
+//   ticketId: 1,
+//   trainId: 'g888',
+//   beginStation: '北京',
+//   endStation: '东京',
+//   startTime: '2022-1-23',
+//   description: '北京-南京-东京-西京',
+// })
 
 console.log("datainit", dataInit);
 export default defineComponent({
@@ -232,7 +232,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.loadInfo();
+    //this.loadInfo();
   },
   methods: {
     loadInfo: function () {

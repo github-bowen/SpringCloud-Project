@@ -48,14 +48,15 @@
 <script setup>
 import {computed, reactive} from "vue";
 import {loginReq} from "@/api/user";
-import {useRouter} from "vue-router"
+import router from '../router'
+// import {useRouter} from "vue-router"
 import {message} from "ant-design-vue";
 import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
-
-let $router = useRouter()
+//
+// let $router = useRouter()
 
 let goRegister = () => {
-  $router.push('/register')
+  router.push('/register')
 }
 
 const formState = reactive({
@@ -81,7 +82,7 @@ const onFinish = values => {
       localStorage.setItem('isAdmin', res.data.data.isAdmin,)
       console.log(res.data);
       message.success('登录成功');
-      $router.push('/main');
+      router.push('/main');
     } else {
       message.error('登录失败,请重试!');
     }

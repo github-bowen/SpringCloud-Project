@@ -34,19 +34,6 @@
           </template>
           <span>车次管理</span>
         </a-menu-item>
-
-        <a-sub-menu key="sub2" v-if="isAdmin">
-          <template #icon>
-            <AppstoreOutlined/>
-          </template>
-          <template #title>多级菜单样例</template>
-          <a-menu-item key="9">Option 9</a-menu-item>
-          <a-menu-item key="10">Option 10</a-menu-item>
-          <a-sub-menu key="sub3" title="Submenu">
-            <a-menu-item key="11">Option 11</a-menu-item>
-            <a-menu-item key="12">Option 12</a-menu-item>
-          </a-sub-menu>
-        </a-sub-menu>
       </a-menu>
 
     </a-layout-sider>
@@ -90,14 +77,14 @@ import {
   MenuFoldOutlined,
 } from '@ant-design/icons-vue';
 import {ref} from 'vue'
-import {useRouter} from "vue-router";
+import router from '../router'
 import TestComponent from "@/components/testComponent";
 import ModifyUserInfo from "@/components/modifyUserInfo";
 import AddTrainForm from "@/components/addTrainForm";
 import BuyTicket from "@/components/buyTicket";
 import MyTicket from "@/components/myTicket";
 //左侧菜单选中的key
-let $router = useRouter()
+
 
 let selectedKeys = ref(['1'])
 // 是否折叠
@@ -108,7 +95,8 @@ let option = ref(1);
 
 let logout = () => {
   localStorage.clear();
-  $router.push('/');
+  router.push('/');
+  router.go(0);
 }
 
 </script>

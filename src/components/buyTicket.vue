@@ -76,9 +76,8 @@ showTrainReq('get').then(res => {
         key: res.data.data[i].key,
         trainId: res.data.data[i].trainId,
         route: res.data.data[i].route,
-        capacity: res.data.data[i].capacity,
+        capacity: res.data.data[i].remain,
         startTime: res.data.data[i].startTime,
-        // frequency: res.data.data[i].frequency,
         description: res.data.data[i].description,
       });
     }

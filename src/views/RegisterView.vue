@@ -50,10 +50,10 @@
 <script setup>
 import {computed, reactive} from "vue";
 import {registerReq} from "@/api/user";
-import {useRouter} from "vue-router"
+import router from '../router';
 import {message} from "ant-design-vue";
 
-let $router = useRouter()
+
 
 const formState = reactive({
   username: '',
@@ -71,7 +71,7 @@ const onFinish = values => {
   }).then(res=>{
     if (res.data.success) {
       message.success('注册成功')
-      $router.push('/')
+      router.push('/')
     } else {
       message.error('该用户已存在')
     }

@@ -52,7 +52,6 @@ export default defineComponent({
     const train_route = props.trainRoute;
 
     const sendAddRequest = async () => {
-
       let ret = false;
       await addTicketReq('post', {
         beginStation: dynamicValidateForm.beginStation,
