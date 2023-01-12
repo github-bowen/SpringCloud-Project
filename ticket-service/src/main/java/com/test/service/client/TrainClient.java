@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(value = "train-service")
 public interface TrainClient {
@@ -12,8 +13,8 @@ public interface TrainClient {
     Train queryTrain(@PathVariable("tid") String tid);
 
     @PostMapping("/train/try-selling-ticket/{trainId}")
-    void trySellingTicket(@PathVariable("trainId") String tid);
+    boolean trySellingTicket(@PathVariable("trainId") String tid);
 
-    @PostMapping("/train/return-ticket/{trainId}")
+    @RequestMapping("/train/return-ticket/{trainId}")
     void returnTicket(@PathVariable("trainId") String tid);
 }

@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface TrainMapper {
 
-    @Select("select * from db_train where tid = #{tid}")
+    @Select("select * from db_train where tid = #{tid};")
     Train getTrainById(String tid);
 
     @Select("select * from db_train")

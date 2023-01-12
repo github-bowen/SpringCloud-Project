@@ -23,19 +23,32 @@ public class TrainController {
     HttpServletRequest request;
 
     // 新增，用于从 TicketController 访问
-    @PostMapping("/train/return-ticket/{trainId}")
+    @RequestMapping("/train/return-ticket/{trainId}")
     public void returnTicket(@PathVariable("trainId") String tid) {
         System.out.println("\n");
         logTitle("TrainController::returnTicket()");
+
+        logContent("退票的 train_id: " + tid);  // FIXME: 这里能正常得到 tid
+        logContent("退票前：" + service.getTrainById(tid));  // FIXME: 这里会得到 null
         service.returnTicket(tid);
+        logContent("退票后：" + service.getTrainById(tid));
+
+        logContent("TrainController::returnTicket 成功");
     }
 
     // 新增，用于从 TicketController 访问
     @PostMapping("/train/try-selling-ticket/{trainId}")
-    public void trySellingTicket(@PathVariable("trainId") String tid) {
+    public boolean trySellingTicket(@PathVariable("trainId") String tid) {
         System.out.println("\n");
         logTitle("TrainController::trySellingTicket()");
-        service.trySellingTicket(tid);  // remain 约束 unsigned，抛异常
+        try {
+            service.trySellingTicket(tid);  // remain 约束 unsigned，抛异常
+        } catch (Exception e) {
+            System.err.println("TrainController::trySellingTicket 失败");
+            return false;
+        }
+        logContent("TrainController::trySellingTicket 成功");
+        return true;
     }
 
     // 新增，用于从 TicketController 访问
@@ -114,7 +127,7 @@ public class TrainController {
         } catch (Exception E) {
             response.put("success", false);
         }
-        logContent("del: " +tid + " , " + response);
+        logContent("del: " + tid + " , " + response);
         return response;
     }
 

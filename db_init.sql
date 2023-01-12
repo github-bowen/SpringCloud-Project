@@ -31,8 +31,8 @@ CREATE TABLE `db_ticket` (
   PRIMARY KEY (`ticket_id`),
   UNIQUE KEY `db_ticket_pk` (`user_id`,`train_id`),
   KEY `db_ticket_db_train_null_fk` (`train_id`),
-  CONSTRAINT `db_ticket_db_train_null_fk` FOREIGN KEY (`train_id`) REFERENCES `db_train` (`tid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `db_ticket_db_user_null_fk` FOREIGN KEY (`user_id`) REFERENCES `db_user` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `db_ticket_db_train_null_fk` FOREIGN KEY (`train_id`) REFERENCES `db_train` (`tid`) ON DELETE CASCADE ON UPDATE CASCADE
+#   CONSTRAINT `db_ticket_db_user_null_fk` FOREIGN KEY (`user_id`) REFERENCES `db_user` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

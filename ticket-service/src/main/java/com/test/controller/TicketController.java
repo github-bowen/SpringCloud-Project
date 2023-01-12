@@ -44,21 +44,13 @@ public class TicketController {
         String startStation = jsonObject.getString("beginStation");
         String endStation = jsonObject.getString("endStation");
 
-//        // 从 TrainController 获取车次信息
-//        String queryTrainUrl = TRAIN_URL + "/train/" + trainId;
-//        Train train = restTemplate.getForObject(queryTrainUrl, Train.class);
-
         // 做两件事：
         // db_train 里面，先尝试对 train 的 remain 减一
         // 如果成功，再向 db_ticket 里面插入新的 ticket
 
-        try {
-            //String trySellingTicketUrl = TRAIN_URL + "/train/try-selling-ticket/" + trainId;
-            //restTemplate.postForObject(trySellingTicketUrl, null, JSONObject.class);
-            trainClient.trySellingTicket(trainId);
-        } catch (Exception e) {
-//            e.printStackTrace();
+        if (!trainClient.trySellingTicket(trainId)) {
             response.put("success", false);
+            logContent("返回的 response: " + response);
             return response;
         }
 
@@ -67,21 +59,24 @@ public class TicketController {
         try {
             service.addTicket(token, trainId, startStation, endStation);
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("添加 ticket 失败 (userId: " + currentUserId() + ", trainId: " + trainId + ", startStation: "
-                + startStation + ", endStation: " + endStation + ")");
+                    + startStation + ", endStation: " + endStation + ")");
 //            e.printStackTrace();
             response.put("success", false);
+            logContent("返回的 response: " + response);
             return response;
         }
         logContent("成功添加 ticket (userId: " + currentUserId() + ", trainId: " + trainId + ", startStation: "
                 + startStation + ", endStation: " + endStation + ")");
         response.put("success", true);
+        logContent("返回的 response: " + response);
         return response;
     }
 
     // 退票
 //    @RequestMapping("/delTicket/{ticketId}")
-    @GetMapping("/delTicket/{ticketId}")
+    @RequestMapping("/delTicket/{ticketId}")
     public Map<String, Object> delTicket(@PathVariable(name = "ticketId") String ticketId) {
         System.out.println("\n");
         logTitle("TicketController::delTicket()");
@@ -102,10 +97,13 @@ public class TicketController {
         try {
             trainClient.returnTicket(ticketId);
             service.deleteTicket(String.valueOf(Integer.parseInt(ticketId)));
+            logContent("TicketController::delTicket 成功");
             return new HashMap<String, Object>() {{
                 put("success", true);
             }};
-        }catch (Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            logContent("TicketController::delTicket 失败");
             return new HashMap<String, Object>() {{
                 put("success", false);
             }};
@@ -145,8 +143,7 @@ public class TicketController {
         logContent("显示该用户所有车次：");
 
         String token = request.getHeader("Authorization");
-        logContent("myTicket: userId is :" + token);
-        logContent(service.getTicketByTicketId(token).toString());
+        logContent("myTicket: userId is: " + token);
 
         List<Map<String, Object>> data = service.getTicketsByUserId(
                 token).stream().map(ticket ->
