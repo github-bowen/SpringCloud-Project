@@ -56,6 +56,7 @@ import {defineComponent, reactive, ref} from 'vue';
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import {addTrainReq} from "@/api/train";
 import {message} from "ant-design-vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   components: {
@@ -76,7 +77,7 @@ export default defineComponent({
       frequency: ''
     });
 
-    const sendAddRequest = () => {
+    const sendAddRequest = async () => {
       console.log(dynamicValidateForm.trainId)
       //console.log(dynamicValidateForm.stations.toString())
       let a = []
@@ -84,7 +85,8 @@ export default defineComponent({
         a.push(dynamicValidateForm.stations[i].stationName)
       }
       console.log(a.toString())
-      addTrainReq('post', {
+      let ret = false;
+      await addTrainReq('post', {
         trainId: dynamicValidateForm.trainId,
         stations: a.toString(),//dynamicValidateForm.stations,
         capacity: dynamicValidateForm.capacity,
@@ -94,10 +96,13 @@ export default defineComponent({
         let data = res.data
         if (data.success) {
           message.success('车次添加成功')
+          return true;
         } else {
           message.error('车次添加成功')
+          return false;
         }
       })
+      return ret;
     };
     const clearForm = () => {
       dynamicValidateForm.stations = []
@@ -108,20 +113,25 @@ export default defineComponent({
     }
     const handleOk = e => {
       // request
-      sendAddRequest();
-      console.log(e);
-      /*发送请求,清除表格*/
-      visible.value = false;
-      clearForm();
+      if (sendAddRequest()) {
+        console.log(e);
+        /*发送请求,清除表格*/
+        visible.value = false;
+        clearForm();
+        useRouter().go(0);
+      }
     };
 
     const onFinish = values => {
       // request
-      sendAddRequest();
-      console.log('Received values of form:', values);
-      //console.log('dynamicValidateForm:', dynamicValidateForm);
-      visible.value = false;
-      clearForm();
+      var b = sendAddRequest();
+      if (b) {
+        console.log('Received values of form:', values);
+        //console.log('dynamicValidateForm:', dynamicValidateForm);
+        visible.value = false;
+        clearForm();
+        useRouter().go(0);
+      }
     };
 
 

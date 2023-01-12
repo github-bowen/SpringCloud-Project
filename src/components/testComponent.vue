@@ -1,10 +1,10 @@
 <template>
-  <a-table :columns="columns" :data-source="dataSource"
+  <a-table :columns="columns" :data-source="dataInit"
            :pagination="pagination" :showQuickJumper="true"
-           bordered>
+           bordered v-if="r">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'trainId'">
-        <span style="color: #1890ff">Name</span>
+        <span style="color: #1890ff">Name </span>
       </template>
     </template>
     <!--    搜索-->
@@ -125,6 +125,7 @@ let dataInit = [{
   description: '西直门-大钟寺-知春路-五道口-上地-xxx-xxx-xxx-xxx-xxx-xxx-东直门',
 },
 ];
+
 console.log("datainit", dataInit);
 export default defineComponent({
   components: {SearchOutlined},
@@ -134,6 +135,7 @@ export default defineComponent({
       searchedColumn: '',
     });
     const searchInput = ref();
+    let r = true;
     const columns = [{
       title: '车次ID',
       dataIndex: 'trainId',
@@ -186,27 +188,6 @@ export default defineComponent({
       title: 'operation',
       dataIndex: 'operation',
     }];
-    showTrainReq('get').then(res => {
-      if (res.data.success) {
-        dataInit = []
-        for (let i = 0; i < res.data.data.length; i++) {
-          console.log(res.data.data[i]);
-          dataInit.push({
-            key: res.data.data[i].key,
-            trainId: res.data.data[i].trainId,
-            route: res.data.data[i].route,
-            capacity: res.data.data[i].capacity,
-            startTime: res.data.data[i].startTime,
-            frequency: res.data.data[i].frequency,
-            description: res.data.data[i].description,
-          });
-        }
-        console.log(dataInit);
-        message.success('成功加载车次信息')
-      } else {
-        message.success('加载车次信息失败')
-      }
-    })
     let dataSource = ref(dataInit);
     const editableData = reactive({});
     const edit = key => {
@@ -255,7 +236,8 @@ export default defineComponent({
       state.searchText = '';
     };
     return {
-      //data,
+      r,
+      dataInit,
       dataSource,
       columns,
       editingKey: '',
@@ -272,20 +254,36 @@ export default defineComponent({
     };
   },
   mounted() {
-    //this.loadInfo()
+    this.loadInfo();
   },
   methods: {
     loadInfo: function () {
       showTrainReq('get').then(res => {
         if (res.data.success) {
-          console.log(res.data.data)
-          this.data = res.data.data;
-          this.dataSource = ref(res.data.data);
+          dataInit = []
+          for (let i = 0; i < res.data.data.length; i++) {
+            console.log(res.data.data[i]);
+            dataInit.push({
+              key: res.data.data[i].key,
+              trainId: res.data.data[i].trainId,
+              route: res.data.data[i].route,
+              capacity: res.data.data[i].capacity,
+              startTime: res.data.data[i].startTime,
+              frequency: res.data.data[i].frequency,
+              description: res.data.data[i].description,
+            });
+          }
+          this.rerender();
+          console.log(dataInit);
           message.success('成功加载车次信息')
         } else {
           message.success('加载车次信息失败')
         }
       })
+    },
+    rerender(){
+      this.r = false;
+      this.$nextTick(()=>this.r = true)
     }
   }
 });
