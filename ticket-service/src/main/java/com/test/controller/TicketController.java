@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.test.entity.*;
 import com.test.service.TicketService;
 import com.test.service.client.TrainClient;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -44,6 +45,7 @@ public class TicketController {
 
     // 买票
     @PostMapping("/addTicket/{trainId}")
+    @GlobalTransactional
     public Map<String, Object> addTicket(@PathVariable(name = "trainId") String trainId,
                                          @RequestBody String reqBody) {
         System.out.println("\n");
@@ -86,6 +88,7 @@ public class TicketController {
     // 退票
 //    @RequestMapping("/delTicket/{ticketId}")
     @RequestMapping("/delTicket/{ticketId}")
+    @GlobalTransactional
     public Map<String, Object> delTicket(@PathVariable(name = "ticketId") String ticketId) {
         System.out.println("\n");
         logTitle("TicketController::delTicket()");
