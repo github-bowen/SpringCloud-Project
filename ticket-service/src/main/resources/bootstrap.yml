@@ -8,3 +8,10 @@ spring:
       config:
         file-extension: yml
         server-addr: localhost:8848
+
+    sentinel:
+      transport:
+        # 添加监控页面地址
+        dashboard: localhost:8858
+      block-page: /blocked
+      web-context-unify: false

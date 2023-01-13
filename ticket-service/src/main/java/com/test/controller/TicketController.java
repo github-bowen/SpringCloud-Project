@@ -33,6 +33,15 @@ public class TicketController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @RequestMapping("/blocked")
+    JSONObject blocked() {
+        JSONObject object = new JSONObject();
+        object.put("code", 403);
+        object.put("success", false);
+        object.put("massage", "您的请求频率过快，请稍后再试！");
+        return object;
+    }
+
     // 买票
     @PostMapping("/addTicket/{trainId}")
     public Map<String, Object> addTicket(@PathVariable(name = "trainId") String trainId,

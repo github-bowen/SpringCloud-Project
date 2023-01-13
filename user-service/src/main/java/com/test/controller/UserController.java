@@ -24,6 +24,15 @@ public class UserController {
     @Autowired
     HttpServletRequest request;
 
+    @RequestMapping("/blocked")
+    JSONObject blocked() {
+        JSONObject object = new JSONObject();
+        object.put("code", 403);
+        object.put("success", false);
+        object.put("massage", "您的请求频率过快，请稍后再试！");
+        return object;
+    }
+
     @RequestMapping("/all-users")
     public List<User> allUsers() {
         return service.allUsers();

@@ -22,6 +22,15 @@ public class TrainController {
     @Autowired
     HttpServletRequest request;
 
+    @RequestMapping("/blocked")
+    JSONObject blocked() {
+        JSONObject object = new JSONObject();
+        object.put("code", 403);
+        object.put("success", false);
+        object.put("massage", "您的请求频率过快，请稍后再试！");
+        return object;
+    }
+
     // 新增，用于从 TicketController 访问
     @RequestMapping("/train/return-ticket/{trainId}")
     public void returnTicket(@PathVariable("trainId") String tid) {
